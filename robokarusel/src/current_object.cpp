@@ -4,6 +4,7 @@
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include "robokarusel/SearchObject.h"
 
 //using namespace std;
 class GetCurrentObject
@@ -14,6 +15,8 @@ private:
 	image_transport::Subscriber image_sub_;
 	image_transport::Publisher image_res_pub_;
 	image_transport::Publisher image_cur_obj_pub_;
+	std::string object = "cyl", res_color = "no";
+	ros::ServiceServer service;
 
 public:
 	GetCurrentObject()
@@ -22,7 +25,19 @@ public:
 		image_sub_ = it_.subscribe("/main_camera/image_raw", 1, &GetCurrentObject::getImage, this);
 		image_res_pub_ = it_.advertise("/following_line/current_object", 1);
 		image_cur_obj_pub_ = it_.advertise("/following_line/connected_components", 1);
+		service = nh_.advertiseService("search_object", &GetCurrentObject::getCurrentObjectHandle, this);
 		ROS_INFO("Inited");
+	}
+
+	bool getCurrentObjectHandle(robokarusel::SearchObject::Request  &req,
+								robokarusel::SearchObject::Response &res)
+	{
+		if (req.status)
+		{
+			res.object = object;
+			res.color = res_color;
+		}
+		return true;
 	}
 
 	void sendImage(cv::Mat image, image_transport::Publisher image_pub_)
@@ -115,7 +130,7 @@ public:
 		color.push_back(cv::Scalar(255, 0, 0)); color.push_back(cv::Scalar(0, 255, 217));
 
 		cv::Mat blurred, hsv, kernel, mask;
-		bool st = false;
+		bool is_cube = false;
 
 		cv::GaussianBlur(img, blurred, cv::Size(11, 11), 0, 0);
 		cv::cvtColor(blurred, hsv, cv::COLOR_BGR2HSV);
@@ -141,13 +156,15 @@ public:
 				if (label == min_idx)
 				{
 					cv::putText(img, color_name[i], center, cv::FONT_HERSHEY_DUPLEX,1.0,color[i], 2);
+					object = "cube"; res_color = color_name[i];
 					//cout << "Color was found. Its name is " << color_name[i] << endl;
-					st = true;
+					is_cube = true;
 					break;
 				}
 			}
-			if (st) break;
+			if (is_cube) break;
 		}
+		if (!is_cube) object = "cyl";
 		sendImage(img, image_res_pub_);
 	}
 };
