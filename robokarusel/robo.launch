@@ -1,0 +1,15 @@
+<launch>
+	<machine	 name		= "robot"
+				 address	= "robot"
+				 user		= "pi"
+				 password	= "raspberry"
+				 env-loader	= "~/env.sh">
+	</machine>
+
+
+	<node	machine = "robot"
+			pkg		= "robo" 
+			type	= "current_object" 
+			name	= "current_object"
+			output	= "screen"/>
+</launch>
