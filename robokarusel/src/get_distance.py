@@ -5,32 +5,27 @@ import pigpio
 import collections
 import numpy
 import rospy
-from line.srv import *
+from robokarusel.srv import *
 
 def init():
-    global pi, done, low,history
+    global TRIG, ECHO,  pi, done, low,history
     pi = pigpio.pi()
     done = threading.Event()
     low = 0.0
     history = collections.deque(maxlen=10)
     rospy.init_node('get_distance_server')
-
-    global TRIG, ECHO
     TRIG = 23
-    ECHO = 18
+    ECHO = 24
     pi.set_mode(TRIG, pigpio.OUTPUT)
     pi.set_mode(ECHO, pigpio.INPUT)
-
     pi.callback(ECHO, pigpio.RISING_EDGE, rise)
     pi.callback(ECHO, pigpio.FALLING_EDGE, fall)
-
     rospy.loginfo("GPIO are inited")
-
     a = rospy.Service('get_distance', GetDistance, handle_dist)
-    rospy.loginfo("Service GetDistance is inited")
-    rospy.spin()
-
-
+	#while True:
+	#	print read_distance_filtred()
+    #rospy.loginfo("Service GetDistance is inited")
+	#rospy.spin()
 
 def rise(gpio, level, tick):
         global high
@@ -60,4 +55,6 @@ def handle_dist(req):
 
 
 if __name__ == "__main__":
-    init()
+	init()
+	while True:
+		print read_distance_filtered()
