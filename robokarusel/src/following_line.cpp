@@ -8,6 +8,9 @@
 #include "robokarusel/SetSpeed.h"
 #include "robokarusel/FollowLine.h"
 
+#define HEIGHT 640
+#define WIDTH 480
+
 class DetectLine
 {
 private:
@@ -55,7 +58,7 @@ public:
 	void findLineCenter(const sensor_msgs::ImageConstPtr& msg)
 	{
 		cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image;
-		cv::Rect roi(20, 170, 280, 90);
+		cv::Rect roi(70, 30, 130, 70);
 		cv::Mat roiImg = image(roi);
 		cv::Mat output = roiImg.clone();
 
@@ -83,8 +86,8 @@ public:
 			cv::Moments mu;
 			mu = cv::moments(contours[MaxAreaContourIndex], false);
 			cv::Point2f center(mu.m10 / mu.m00, mu.m01 / mu.m00);
-			error = (center.x - 85) * 100 / 85;
-			cv::line(output, center, cv::Point(85, 35), cv::Scalar(0, 255, 0), 1, 8, 0);
+			error = (center.x - HEIGHT / 2) * 100 / HEIGHT / 2;
+			cv::line(output, center, cv::Point(HEIGHT / 2, WIDTH), cv::Scalar(0, 255, 0), 1, 8, 0);
 			cv::circle(output, center, 5, cv::Scalar(255, 255, 255), -1, 8, 0);
 		}
 		cv::drawContours(output, contours, MaxAreaContourIndex, cv::Scalar(0, 0, 0), 2, 8, hierarchy, 0, cv::Point());

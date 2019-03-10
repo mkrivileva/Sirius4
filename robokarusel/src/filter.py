@@ -16,8 +16,8 @@ cv2.createTrackbar('s2', 'settings', 255, 255, nothing)
 cv2.createTrackbar('v2', 'settings', 255, 255, nothing)
 crange = [0,0,0, 0,0,0]
 
-#num = input()
-imageName = 'images/img9.jpg'
+num = input()
+imageName = 'images/img' + str(num) + '.jpg'
 img = cv2.imread( imageName, 1 )
 #print(img.dtype)
 
