@@ -8,8 +8,8 @@
 #include "robokarusel/SetSpeed.h"
 #include "robokarusel/FollowLine.h"
 
-#define HEIGHT 640
-#define WIDTH 480
+#define HEIGHT 70
+#define WIDTH 280
 
 class DetectLine
 {
@@ -20,9 +20,9 @@ private:
 	image_transport::Publisher image_pub_;
 	ros::ServiceServer service;
 	float Kp, Ki, Kd;
-    int32_t userSpeed = 0, error, j = 0;
-    bool PIDReset = false;
-    bool setNewSpeed = true;
+	int32_t userSpeed = 0, error, j = 0;
+	bool PIDReset = false;
+	bool setNewSpeed = true;
 
 
 public:
@@ -32,7 +32,7 @@ public:
 		image_sub_ = it_.subscribe("/main_camera/image_raw", 1, &DetectLine::findLineCenter, this);
 		image_pub_ = it_.advertise("/following_line/detect_line", 1);
 		service = nh_.advertiseService("following_line", &DetectLine::process, this);
-		ROS_INFO("Inited");
+		ROS_INFO("Service FollowLine is inited");
 	}
 
 	bool process(robokarusel::FollowLine::Request &req,
@@ -58,7 +58,7 @@ public:
 	void findLineCenter(const sensor_msgs::ImageConstPtr& msg)
 	{
 		cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image;
-		cv::Rect roi(70, 30, 130, 70);
+		cv::Rect roi(20, 170, 280, 70);
 		cv::Mat roiImg = image(roi);
 		cv::Mat output = roiImg.clone();
 
@@ -86,8 +86,8 @@ public:
 			cv::Moments mu;
 			mu = cv::moments(contours[MaxAreaContourIndex], false);
 			cv::Point2f center(mu.m10 / mu.m00, mu.m01 / mu.m00);
-			error = (center.x - HEIGHT / 2) * 100 / HEIGHT / 2;
-			cv::line(output, center, cv::Point(HEIGHT / 2, WIDTH), cv::Scalar(0, 255, 0), 1, 8, 0);
+			error = (center.x - WIDTH / 2) * 100 / WIDTH / 2;
+			cv::line(output, center, cv::Point(WIDTH / 2, HEIGHT / 2), cv::Scalar(0, 255, 0), 1, 8, 0);
 			cv::circle(output, center, 5, cv::Scalar(255, 255, 255), -1, 8, 0);
 		}
 		cv::drawContours(output, contours, MaxAreaContourIndex, cv::Scalar(0, 0, 0), 2, 8, hierarchy, 0, cv::Point());

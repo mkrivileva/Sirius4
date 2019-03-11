@@ -26,7 +26,7 @@ public:
 		image_res_pub_ = it_.advertise("/following_line/current_object", 1);
 		image_cur_obj_pub_ = it_.advertise("/following_line/connected_components", 1);
 		service = nh_.advertiseService("search_object", &GetCurrentObject::getCurrentObjectHandle, this);
-		ROS_INFO("Inited");
+		ROS_INFO("Service SearchObject is inited");
 	}
 
 	bool getCurrentObjectHandle(robokarusel::SearchObject::Request  &req,
