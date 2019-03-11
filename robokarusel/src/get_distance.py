@@ -15,7 +15,7 @@ def init():
     history = collections.deque(maxlen=10)
     rospy.init_node('get_distance_server')
     TRIG = 23
-    ECHO = 24
+    ECHO = 18
     pi.set_mode(TRIG, pigpio.OUTPUT)
     pi.set_mode(ECHO, pigpio.INPUT)
     pi.callback(ECHO, pigpio.RISING_EDGE, rise)

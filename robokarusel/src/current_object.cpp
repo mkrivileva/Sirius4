@@ -110,16 +110,16 @@ public:
 	void setColorFilter(cv::Mat labels, cv::Mat img, int min_idx)
 	{
 		std::vector <cv::Scalar> lower; // the lower boundaries of the colors in the HSV color space
-		lower.push_back(cv::Scalar(150, 60, 80)); //red
-		lower.push_back(cv::Scalar(90, 13, 74)); //green
-		lower.push_back(cv::Scalar(97, 100, 45)); //blue
-		lower.push_back(cv::Scalar(15, 70, 80)); //yellow
+		lower.push_back(cv::Scalar(160, 70, 90)); //red
+		lower.push_back(cv::Scalar(0, 0, 60)); //green
+		lower.push_back(cv::Scalar(110, 30, 70)); //blue
+		lower.push_back(cv::Scalar(0, 40, 90)); //yellow
 
 		std::vector <cv::Scalar> upper; // the upper boundaries of the colors in the HSV color space
-		upper.push_back(cv::Scalar(170, 90, 120)); //red
-		upper.push_back(cv::Scalar(117, 30, 120)); //green
-		upper.push_back(cv::Scalar(154, 255, 95)); //blue
-		upper.push_back(cv::Scalar(110, 230, 215)); //yellow
+		upper.push_back(cv::Scalar(180, 110, 150)); //red
+		upper.push_back(cv::Scalar(125, 25, 90)); //green
+		upper.push_back(cv::Scalar(131, 66, 110)); //blue
+		upper.push_back(cv::Scalar(22, 85, 120)); //yellow
 
 		std::vector <std::string> color_name; // the names of color
 		color_name.push_back("red"); color_name.push_back("green");
