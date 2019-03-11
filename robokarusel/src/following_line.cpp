@@ -8,6 +8,9 @@
 #include "robokarusel/SetSpeed.h"
 #include "robokarusel/FollowLine.h"
 
+#define HEIGHT 90
+#define WIDTH 170
+
 class DetectLine
 {
 private:
@@ -83,8 +86,8 @@ public:
 			cv::Moments mu;
 			mu = cv::moments(contours[MaxAreaContourIndex], false);
 			cv::Point2f center(mu.m10 / mu.m00, mu.m01 / mu.m00);
-			error = (center.x - 85) * 100 / 85;
-			cv::line(output, center, cv::Point(85, 35), cv::Scalar(0, 255, 0), 1, 8, 0);
+			error = (center.x - WIDTH / 2) * 100 / WIDTH / 2;
+			cv::line(output, center, cv::Point(WIDTH / 2, HEIGHT / 2), cv::Scalar(0, 255, 0), 1, 8, 0);
 			cv::circle(output, center, 5, cv::Scalar(255, 255, 255), -1, 8, 0);
 		}
 		cv::drawContours(output, contours, MaxAreaContourIndex, cv::Scalar(0, 0, 0), 2, 8, hierarchy, 0, cv::Point());

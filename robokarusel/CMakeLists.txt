@@ -64,6 +64,8 @@ find_package(catkin REQUIRED COMPONENTS
 	FollowLine.srv
 	GetDistance.srv
     ChangeImageSize.srv
+	ControlServo.srv
+	ButtonState.srv
  )
 
 ## Generate actions in the 'action' folder
