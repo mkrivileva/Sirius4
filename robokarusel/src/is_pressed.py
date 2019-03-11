@@ -10,7 +10,7 @@ def init():
 	GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
 
-	PIN = 20
+	PIN = 33
 
 	GPIO.setup(PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
