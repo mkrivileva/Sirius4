@@ -8,8 +8,8 @@
 #include "robokarusel/SetSpeed.h"
 #include "robokarusel/FollowLine.h"
 
-#define HEIGHT 90
-#define WIDTH 170
+#define HEIGHT 70
+#define WIDTH 280
 
 class DetectLine
 {
@@ -20,9 +20,9 @@ private:
 	image_transport::Publisher image_pub_;
 	ros::ServiceServer service;
 	float Kp, Ki, Kd;
-    int32_t userSpeed = 0, error, j = 0;
-    bool PIDReset = false;
-    bool setNewSpeed = true;
+	int32_t userSpeed = 0, error, j = 0;
+	bool PIDReset = false;
+	bool setNewSpeed = true;
 
 
 public:
@@ -32,7 +32,7 @@ public:
 		image_sub_ = it_.subscribe("/main_camera/image_raw", 1, &DetectLine::findLineCenter, this);
 		image_pub_ = it_.advertise("/following_line/detect_line", 1);
 		service = nh_.advertiseService("following_line", &DetectLine::process, this);
-		ROS_INFO("Inited");
+		ROS_INFO("Service FollowLine is inited");
 	}
 
 	bool process(robokarusel::FollowLine::Request &req,
@@ -58,7 +58,7 @@ public:
 	void findLineCenter(const sensor_msgs::ImageConstPtr& msg)
 	{
 		cv::Mat image = cv_bridge::toCvShare(msg, "bgr8")->image;
-		cv::Rect roi(20, 170, 280, 90);
+		cv::Rect roi(20, 170, 280, 70);
 		cv::Mat roiImg = image(roi);
 		cv::Mat output = roiImg.clone();
 

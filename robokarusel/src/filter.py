@@ -43,6 +43,8 @@ while True:
     cv2.imshow('result', thresh)
 
     ch = cv2.waitKey(5)
+    if ch == ord('a'):
+        print "pressed a"
     if ch == 27:
         break
 

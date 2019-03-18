@@ -1,20 +1,21 @@
 import rospy
-from robokarusel import srv
+from robokarusel.srv import *
+import time
 
 rospy.init_node('main')
 
-get_distance = rospy.ServiceProxy('get_distance', srv.GetDistance)
-follow_line = rospy.ServiceProxy('following_line', srv.FollowLine)
-current_object = rospy.ServiceProxy('search_object', srv.SearchObject)
-is_pressed = rospy.ServiceProxy('is_pressed', srv.ButtonState)
-control_servo = rospy.ServiceProxy('control_servo', srv.ControlServo)
+get_distance = rospy.ServiceProxy('get_distance', GetDistance)
+follow_line = rospy.ServiceProxy('following_line', FollowLine)
+current_object = rospy.ServiceProxy('search_object', SearchObject)
+is_pressed = rospy.ServiceProxy('is_pressed', ButtonState)
+control_servo = rospy.ServiceProxy('control_servo', ControlServo)
 
-target_color = 'red'
+target_color = 'green'
 sum = 0;
 
 print("ready")
 while True:
-    while not is_pressed(True).state:
+    while is_pressed(True).state:
         continue
     print("go")
 
@@ -33,7 +34,7 @@ while True:
             dist = 19
 
         time.sleep(.2)
-        follow_line(kp=-2, ki=0, kd=0, speed=40)
+        follow_line(kp=2, ki=0, kd=0, speed=40)
 
         while get_distance(True).distance > dist:
             continue

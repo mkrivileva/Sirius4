@@ -26,7 +26,7 @@ public:
 		image_res_pub_ = it_.advertise("/following_line/current_object", 1);
 		image_cur_obj_pub_ = it_.advertise("/following_line/connected_components", 1);
 		service = nh_.advertiseService("search_object", &GetCurrentObject::getCurrentObjectHandle, this);
-		ROS_INFO("Inited");
+		ROS_INFO("Service SearchObject is inited");
 	}
 
 	bool getCurrentObjectHandle(robokarusel::SearchObject::Request  &req,
@@ -110,16 +110,16 @@ public:
 	void setColorFilter(cv::Mat labels, cv::Mat img, int min_idx)
 	{
 		std::vector <cv::Scalar> lower; // the lower boundaries of the colors in the HSV color space
-		lower.push_back(cv::Scalar(150, 130, 50)); //red
-		lower.push_back(cv::Scalar(45, 107, 50)); //green
-		lower.push_back(cv::Scalar(97, 100, 45)); //blue
-		lower.push_back(cv::Scalar(15, 70, 80)); //yellow
+		lower.push_back(cv::Scalar(160, 70, 90)); //red
+		lower.push_back(cv::Scalar(0, 0, 60)); //green
+		lower.push_back(cv::Scalar(110, 30, 70)); //blue
+		lower.push_back(cv::Scalar(0, 40, 90)); //yellow
 
 		std::vector <cv::Scalar> upper; // the upper boundaries of the colors in the HSV color space
-		upper.push_back(cv::Scalar(200, 255, 140)); //red
-		upper.push_back(cv::Scalar(85, 170, 90)); //green
-		upper.push_back(cv::Scalar(154, 255, 95)); //blue
-		upper.push_back(cv::Scalar(110, 230, 215)); //yellow
+		upper.push_back(cv::Scalar(180, 110, 150)); //red
+		upper.push_back(cv::Scalar(125, 25, 90)); //green
+		upper.push_back(cv::Scalar(131, 66, 110)); //blue
+		upper.push_back(cv::Scalar(22, 85, 120)); //yellow
 
 		std::vector <std::string> color_name; // the names of color
 		color_name.push_back("red"); color_name.push_back("green");
