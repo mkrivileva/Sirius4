@@ -4,6 +4,7 @@
 #include <sensor_msgs/image_encodings.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include "robokarusel/SearchObject.h"
 
 //using namespace std;
 class GetCurrentObject
@@ -14,6 +15,8 @@ private:
 	image_transport::Subscriber image_sub_;
 	image_transport::Publisher image_res_pub_;
 	image_transport::Publisher image_cur_obj_pub_;
+	std::string object = "cyl", res_color = "no";
+	ros::ServiceServer service;
 
 public:
 	GetCurrentObject()
@@ -22,7 +25,19 @@ public:
 		image_sub_ = it_.subscribe("/main_camera/image_raw", 1, &GetCurrentObject::getImage, this);
 		image_res_pub_ = it_.advertise("/following_line/current_object", 1);
 		image_cur_obj_pub_ = it_.advertise("/following_line/connected_components", 1);
-		ROS_INFO("Inited");
+		service = nh_.advertiseService("search_object", &GetCurrentObject::getCurrentObjectHandle, this);
+		ROS_INFO("Service SearchObject is inited");
+	}
+
+	bool getCurrentObjectHandle(robokarusel::SearchObject::Request  &req,
+								robokarusel::SearchObject::Response &res)
+	{
+		if (req.status)
+		{
+			res.object = object;
+			res.color = res_color;
+		}
+		return true;
 	}
 
 	void sendImage(cv::Mat image, image_transport::Publisher image_pub_)
@@ -95,16 +110,16 @@ public:
 	void setColorFilter(cv::Mat labels, cv::Mat img, int min_idx)
 	{
 		std::vector <cv::Scalar> lower; // the lower boundaries of the colors in the HSV color space
-		lower.push_back(cv::Scalar(150, 130, 50)); //red
-		lower.push_back(cv::Scalar(45, 107, 50)); //green
-		lower.push_back(cv::Scalar(97, 100, 45)); //blue
-		lower.push_back(cv::Scalar(15, 70, 80)); //yellow
+		lower.push_back(cv::Scalar(160, 70, 90)); //red
+		lower.push_back(cv::Scalar(0, 0, 60)); //green
+		lower.push_back(cv::Scalar(110, 30, 70)); //blue
+		lower.push_back(cv::Scalar(0, 40, 90)); //yellow
 
 		std::vector <cv::Scalar> upper; // the upper boundaries of the colors in the HSV color space
-		upper.push_back(cv::Scalar(200, 255, 140)); //red
-		upper.push_back(cv::Scalar(85, 170, 90)); //green
-		upper.push_back(cv::Scalar(154, 255, 95)); //blue
-		upper.push_back(cv::Scalar(110, 230, 215)); //yellow
+		upper.push_back(cv::Scalar(180, 110, 150)); //red
+		upper.push_back(cv::Scalar(125, 25, 90)); //green
+		upper.push_back(cv::Scalar(131, 66, 110)); //blue
+		upper.push_back(cv::Scalar(22, 85, 120)); //yellow
 
 		std::vector <std::string> color_name; // the names of color
 		color_name.push_back("red"); color_name.push_back("green");
@@ -115,7 +130,7 @@ public:
 		color.push_back(cv::Scalar(255, 0, 0)); color.push_back(cv::Scalar(0, 255, 217));
 
 		cv::Mat blurred, hsv, kernel, mask;
-		bool st = false;
+		bool is_cube = false;
 
 		cv::GaussianBlur(img, blurred, cv::Size(11, 11), 0, 0);
 		cv::cvtColor(blurred, hsv, cv::COLOR_BGR2HSV);
@@ -141,13 +156,15 @@ public:
 				if (label == min_idx)
 				{
 					cv::putText(img, color_name[i], center, cv::FONT_HERSHEY_DUPLEX,1.0,color[i], 2);
+					object = "cube"; res_color = color_name[i];
 					//cout << "Color was found. Its name is " << color_name[i] << endl;
-					st = true;
+					is_cube = true;
 					break;
 				}
 			}
-			if (st) break;
+			if (is_cube) break;
 		}
+		if (!is_cube) object = "cyl";
 		sendImage(img, image_res_pub_);
 	}
 };
