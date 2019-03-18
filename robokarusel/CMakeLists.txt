@@ -56,12 +56,17 @@ find_package(catkin REQUIRED COMPONENTS
 #   Message2.msg
 # )
 
-## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+# Generate services in the 'srv' folder
+ add_service_files(
+   FILES
+    SearchObject.srv
+    SetSpeed.srv
+	FollowLine.srv
+	GetDistance.srv
+    ChangeImageSize.srv
+	ControlServo.srv
+	ButtonState.srv
+ )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -71,10 +76,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -137,7 +142,8 @@ include_directories(
 # With catkin_make all packages are built within a single CMake context
 # The recommended prefix ensures that target names across packages don't collide
  add_executable(current_object src/current_object.cpp)
-
+ add_executable(following_line src/following_line.cpp)
+ add_executable(test src/test.cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -150,6 +156,8 @@ include_directories(
 
 # Specify libraries to link a library or executable target against
  target_link_libraries(current_object ${catkin_LIBRARIES} )
+ target_link_libraries(following_line ${catkin_LIBRARIES} )
+ target_link_libraries(test ${catkin_LIBRARIES} )
 
 #############
 ## Install ##

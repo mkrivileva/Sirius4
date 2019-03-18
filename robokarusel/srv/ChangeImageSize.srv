@@ -1,0 +1,7 @@
+int32 startX
+int32 startY
+int32 width
+int32 height
+---
+bool status
+
